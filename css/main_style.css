@@ -44,13 +44,12 @@ body {
   background-color: white;
   font-size:2rem;
   color:white;
-  margin-bottom: 0;
+  margin-bottom: 1rem;
   transition: all 0.2s;
 }
 .undernav-visible {
   /* height:auto !important; */
   padding:1rem !important;
-  margin-bottom: 1rem !important;
   background-color: rgb(51, 204, 255) !important;
 
 }
