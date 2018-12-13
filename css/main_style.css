@@ -45,11 +45,12 @@ body {
   font-size:2rem;
   color:white;
   margin-bottom: 1rem;
-  height:2rem;
+  height:0;
   transition: all 0.2s;
 }
 .undernav-visible {
   /* height:auto !important; */
+  height:2rem !important;
   padding:1rem !important;
   background-color: rgb(51, 204, 255) !important;
 
