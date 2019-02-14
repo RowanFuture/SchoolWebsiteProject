@@ -56,8 +56,8 @@
 
           var totalCost = 0;
 
-          String.prototype.lines = function() { return this.split(/\r*\n/); }
-          String.prototype.lineCount = function() { return this.lines().length; }
+          // String.prototype.lines = function() { return this.split(/\r*\n/); }
+          // String.prototype.lineCount = function() { return this.lines().length; }
 
           var menuData =
           [
@@ -96,34 +96,35 @@
           var ob = document.getElementById('ob');
           var selCat = 0;
 
+          //create parent to contain the information at the end of the order
           let parNode = document.createElement('div');
           parNode.style.position = "relative";
           parNode.style.top = "1rem";
           OrderText.prepend(parNode);
-
+          //create a div to display "total" message
           let node = document.createElement('div');
           node.innerHTML = "Total:";
           parNode.append(node);
-
+          //create a div to display the price
           var priceItem = document.createElement('div');
           priceItem.innerHTML = "£0";
           priceItem.style.right = "5rem";
           priceItem.style.top = "0rem";
           priceItem.style.position = "absolute";
           parNode.append(priceItem);
-
+          //create categories for add item selection menu
           for(let i = 0; i < menuData.length; i++){
             let cat = document.createElement('button');
             cat.innerHTML = menuData[i][0];
             cat.classList.add('smaller_text');
             cats.append(cat);
+            //add click listener for the category to add an item from that category
             cat.addEventListener("click",function(){
               selCat = i;
               showItemSel();
               console.log(i);
             });
           }
-
           function hideAddItem(){
               id.classList.remove('fade_in');
               setTimeout(function(){
@@ -132,54 +133,53 @@
                   document.body.style['overflow-y'] = "scroll";
               }, 100);
           }
-
           function showAddItem(){
             cats.style.display = "block";
             itemSel.style.display = "none";
             id.style.display = "block";
             document.body.style['overflow-y'] = "hidden";
           }
-
+          //show item selection for a specific category
           function showItemSel(){
-            cats.style.display = "none";
-            itemSel.style.display = "block";
+            //reset items
             while(itemSelVal.children.length > 0){
               itemSelVal.removeChild(itemSelVal.children[0]);
             }
+            //add items from category
             for(let i = 1; i < menuData[selCat].length; i++){
               let node = document.createElement('option');
               node.innerHTML = menuData[selCat][i][0];
               node.classList.add('smaller_text');
-              // node.classList.add('smaller_text');
               itemSelVal.append(node);
             }
+            //show items
+            cats.style.display = "none";
+            itemSel.style.display = "block";
           }
 
           function addItem(){
+            //create parent to contain the order information
             let parNode = document.createElement('div');
             parNode.style.position = "relative";
-            // parNode.classList.add('moveob');
             OrderText.prepend(parNode);
-
+            //create a div with the name of the item and add it to parent
             let i = itemSelVal.selectedIndex;
-
             let node = document.createElement('div');
             node.innerHTML = itemSelVal.options[i].value;
-
             node.classList.add('slideIn');
             parNode.append(node);
-
+            //create a price div then add to parent
             let priceNode = document.createElement('div');
             let val = menuData[selCat][i+1][2];
             priceNode.innerHTML = val;
-
             priceNode.style.right = "5rem";
             priceNode.style.top = "0";
             priceNode.style.position = "absolute";
             parNode.append(priceNode);
-
+            //add cost of item to total cost
             totalCost += parseFloat(val.split("£")[1]);
-
+            priceItem.innerHTML = "£"+parseFloat(totalCost).toFixed(2);
+            //create a button to delete the item from the order
             let closeNode = document.createElement('div');
             closeNode.innerHTML="X";
             closeNode.style.right = "2rem";
@@ -187,16 +187,14 @@
             closeNode.style.position = "absolute";
             closeNode.style.cursor = "pointer";
             closeNode.addEventListener("click",function(){
+              //when order is clicked retrieve price of item
               let _v = OrderText.children[1].innerHTML.split("<")[3].split("£")[1];
               console.log(_v);
-              totalCost -= parseFloat(_v);
+              totalCost -= parseFloat(_v); //remove price of item from total cost
               OrderText.removeChild(parNode);
-              priceItem.innerHTML = "£"+parseFloat(totalCost).toFixed(2);
+              priceItem.innerHTML = "£"+parseFloat(totalCost).toFixed(2); //update the price info at the bottom of page
             });
             parNode.append(closeNode);
-
-            priceItem.innerHTML = "£"+parseFloat(totalCost).toFixed(2);
-
           }
 
         </script>

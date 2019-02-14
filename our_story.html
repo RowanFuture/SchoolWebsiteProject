@@ -112,6 +112,7 @@
 
         <script>
 
+            //establishes all slideshow HTML elements
             var slide = document.getElementById('slideshow');
             var slideshow_desc = document.getElementById('slideshow_desc');
             var slideshow_name = document.getElementById('slideshow_name');
@@ -119,6 +120,7 @@
             var slideshow_right = document.getElementById('slideshow_right');
             var slide_num = document.getElementById('slide_num');
 
+            //array of slideshow slides
             var slideshow = [
               {
                 name: "Our Ethos",
@@ -131,21 +133,21 @@
                 image: 'jungle',
               },
             ];
-            // var slideshow_names = ["Our Ethos","Our Story"];
-            // var slideshow_descriptions = [,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."]
-            // var slideshow_images = ['rainforest','jungle'];
 
             var slideshow_sel = 0;
 
             function updateSlideshow(){
+              //reset slideshow slide selection bar
               slide_num.innerHTML = "";
+              //loop through slides and then add them to slideshow bar
               for(var i = 0; i < slideshow.length; i++){
+                //if slideshow slide is selected then make the slide's icon filled
                 if(i === slideshow_sel) _t = "●";
                 else _t = "○";
+                //creates a button that allows the user to quickly switch to desired slide
                 slide_num.innerHTML += '<span onclick="slideshow_sel = '+i+'; updateSlideshow(); return false">'+_t+'</span>';
-                console.log(i);
               }
-              console.log(slideshow[slideshow_sel]);
+              //updates slideshow to selected slide from slideshow object
               slideshow_name.innerHTML = slideshow[slideshow_sel].name;
               slideshow_desc.innerHTML = slideshow[slideshow_sel].desc;
               slide.style.backgroundImage = "url(./images/"+slideshow[slideshow_sel].image+".jpeg)";
@@ -153,24 +155,20 @@
 
             function slideshowLeft(){
               slideshow_sel--;
+              //subtract 1 from slideshow selection then clamp within acceptable values
               slideshow_sel = Math.min(Math.max(slideshow_sel,0),slideshow.length-1);
               updateSlideshow();
             }
 
             function slideshowRight(){
               slideshow_sel++;
+              //add 1 to slideshow selection then clamp within acceptable values
               slideshow_sel = Math.min(Math.max(slideshow_sel,0),slideshow.length-1);
               updateSlideshow();
             }
 
-            function loadSlideshow(){
-              updateSlideshow();
-              console.log('Slideshow Is Working');
-              // slideshow_left.addEventListener("click", slideshowLeft());
-              // slideshow_right.addEventListener("click", slideshowRight());
-            }
-
-            document.onLoad = loadSlideshow();
+            //when the document loads - load the slideshow
+            document.onLoad = updateSlideshow();
         </script>
 
         <br>

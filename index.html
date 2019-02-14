@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>NPA website</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" type="text/css" href="css/main_style.css">
+
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css"/>
+    </head>
+    <body>
+
+        <div id="openStatus" class="screenOverlay">
+            <div class="openStatusBox">LOADING</div>
+            <button onclick="hideOpeningTimes()" style="width:100%; text-align:center; border:none; font-size:4rem; font-weight: 900; background:none; position: fixed; top:0; margin-top:calc(50vh + 10rem);">
+            X</button>
+        </div>
+
+        <nav>
+            <ul class="navlist">
+              <li class="logopar"><a href="index.html" class="logo">Cafe Esperanza</a></li>
+              <li><a href="contact.html" class="navbtn">Contact</a></li>
+              <li><a href="our_story.html" class="navbtn">Our Story</a></li>
+              <li><a href="menu.html" class="navbtn">Menu</a></li>
+              <li><a href="order.html" onmouseout="hideUndernavMessage()" onmouseover="showUndernavMessage('You can now order takeaway to come and pick up!')" class="ordernav navbtn">Order Now!</a></li>
+            </ul>
+            <div class="clear"></div>
+            <div id="undernavpopup"></div>
+        </nav>
+
+        <div class='header'>
+          <button class=' header_button smaller_text'>
+            Subscribe to our newsletter!
+          </button>
+          <button onclick="showOpeningTimes()" class='header_button smaller_text'>
+            Open 10 AM <br> to 8 PM
+          </button>
+        </div>
+
+        <script>
+          function hideOpeningTimes(){
+              let id = document.getElementById('openStatus');
+              id.classList.remove('fade_in');
+              //after fadeout animation reset body style
+              setTimeout(function(){
+                  let id = document.getElementById('openStatus');
+                  id.style.display = "none";
+                  console.log('worked');
+                  document.body.style['overflow-y'] = "scroll";
+              }, 100);
+          }
+          function showOpeningTimes(){
+            let id = document.getElementById('openStatus');
+            id.style.display = "block";
+            document.body.style['overflow-y'] = "hidden";
+            //plays a fade in animation after 10 millis
+            setTimeout(function(){
+                let id = document.getElementById('openStatus');
+                id.classList.add('fade_in');
+            }, 10);
+            //this code gets the current time as hours and minutes
+            let d = new Date();
+            let h = d.getHours();
+            let m = d.getMinutes();
+            //this area of code calculates the message to display when the opening times button is clicked
+            let t = "";//variable which stores message to display
+            let s = "";//variable which stores an "s" if there are multiple hours in the timer's countdown
+            if(h < 10){
+                if(m == 0){
+                    let v = 10-h; if(v > 1) s+= "s";
+                    t = "Hey! The cafe opens in <br>"+v+" hour"+s+".";
+                } else {
+                    let v = 9-h; if(v > 1) s+= "s";
+                    if(v == 0) t = "Hey! The cafe opens<br>in "+(60 - m)+" minutes.";
+                    else t = "Hey! The cafe opens in <br>"+v+" hour"+s+" and "+(60 - m)+" minutes.";
+                }
+            } else if(h >= 20){
+                t = "Sorry, <br> The cafe is now closed.";
+            } else {
+                let v = (20-Math.ceil(h+m/60)); if(v > 1) s+= "s";
+                t = "The cafe is open!<br>We close in "+v+" hour"+s+".";
+            }
+            //this sets the button's text to the message
+            id.children[0].innerHTML = t;
+          };
+          //these functions diisplay a popup underneath the navbar
+          function showUndernavMessage(x){
+            let id = document.getElementById('undernavpopup');
+            id.innerHTML = x;
+            id.classList.add('undernav-visible');
+          }
+          function hideUndernavMessage(){
+            let id = document.getElementById('undernavpopup');
+            id.classList.remove('undernav-visible');
+          }
+        </script>
+
+        <div class="linebreak"></div>
+
+                <div style="height:40vh"></div>
+
+                <footer>
+                    <ul class="navlist">
+                        <li><a href="https://twitter.com/">Twitter</a></li>
+                        <li><a href="https://facebook.com/">Facebook</a></li>
+                        <li><a href="https://instagram.com/">Instagram</a></li>
+                    </ul>
+                    <div class="bottom_footer">
+                        <p>&copy 2018 Cafe Esperanza</p>
+                    </div>
+                </footer>
+    </body>
+</html>
