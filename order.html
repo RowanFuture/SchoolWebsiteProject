@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>NPA website</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" type="text/css" href="css/main_style.css">
+
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/glacial-indifference" type="text/css"/>
+    </head>
+    <body>
+
+        <nav>
+            <!-- <h2 id="logo">Cafe Esperanza</h2> -->
+            <ul class="navlist">
+              <li class="logopar"><a href="index.html" class="logo">Cafe Esperanza</a></li>
+              <li><a href="contact.html" class="navbtn">Contact</a></li>
+              <li><a href="our_story.html" class="navbtn">Our Story</a></li>
+              <li><a href="menu.html" class="navbtn">Menu</a></li>
+            </ul>
+            <div class="clear"></div>
+            <div id="undernavpopup"></div>
+        </nav>
+
+        <div class="linebreak"></div>
+
+        <div id="addItem" class="screenOverlay">
+          <div id="ob" class="openStatusBox">
+            <div style="width:30rem; margin:auto;" id="cats"></div>
+            <div style="margin:auto;" id="itemSel">
+              <select class="smaller_text"></select>
+              <br>
+              <button class="smaller_text" type="button" onclick="addItem()">Add Selected Item</button>
+              <button class="smaller_text" type="button" onclick="showAddItem()">Back</button>
+            </div>
+          </div>
+          <button nosel onclick="hideAddItem()" style="width:100%; text-align:center; border:none; font-size:4rem; font-weight: 900; background:none; position: fixed; top:0; margin-top:calc(50vh + 10rem);">
+          X</button>
+        </div>
+
+        <div style="padding:3rem calc(35rem + 100% - 1080px);" style="float:center;">
+          <h1>Order</h1>
+          <!-- <p style="margin-left:1rem; font-size:2.3rem">Choose Items</p> -->
+          <div id="OrderText" class="smaller_text" style="width:100%;" rows=1 width=100% readonly></div>
+          <br>
+          <button style="float:left;" class="navbtn orderPageBtns smaller_text" type="button" onclick="showAddItem()">Add Item</button>
+          <button style="float:right; margin-right: 2rem;" class="ordernav orderPageBtns smaller_text" type="submit" value="Submit">Make Purchase</button>
+        </table>
+
+        <script>
+
+          var totalCost = 0;
+
+          String.prototype.lines = function() { return this.split(/\r*\n/); }
+          String.prototype.lineCount = function() { return this.lines().length; }
+
+          var menuData =
+          [
+            [
+              'Drinks',
+              ['English Breakfast Tea','','£2.19'],
+              ['Earl Grey Tea','','£2.19'],
+              ['Green Tea','','£2.49'],
+              ['Matcha Latte','','£2.69'],
+              ['Hot Chocolate','','£2.49'],
+            ],
+            [
+              'Pâtisseries & Cakes',
+              ['Hot Croissant','Served with strawberry jam.','£2.69'],
+              ['Pain Au Chocolat','','£2.69'],
+              ['Jam Tart','','£2.69'],
+              ['Triple Chocolate Cake','Made with soy milk.','£5.69'],
+              ['Cheese Scone','Made with imitation cheese.','£2.69'],
+              ['Apple Pie','','£4.19'],
+              ['Gingerbread','','£1.99'],
+            ],
+            [
+              'Snack Courses',
+              ['Bacon Rolls','Imitation bacon.','£2.99'],
+              ['Parmesan Truffle Fries','Imitation cheese','£9.99'],
+              ['Sweet Potato Fries','','£3.99'],
+              ['Vegetable Crisps','','£2.99'],
+            ]
+          ];
+
+          var cats = document.getElementById('cats');
+          var itemSel = document.getElementById('itemSel');
+          var id = document.getElementById('addItem');
+          var itemSelVal = itemSel.children[0];
+          var OrderText = document.getElementById('OrderText');
+          var ob = document.getElementById('ob');
+          var selCat = 0;
+
+          let parNode = document.createElement('div');
+          parNode.style.position = "relative";
+          parNode.style.top = "1rem";
+          OrderText.prepend(parNode);
+
+          let node = document.createElement('div');
+          node.innerHTML = "Total:";
+          parNode.append(node);
+
+          var priceItem = document.createElement('div');
+          priceItem.innerHTML = "£0";
+          priceItem.style.right = "5rem";
+          priceItem.style.top = "0rem";
+          priceItem.style.position = "absolute";
+          parNode.append(priceItem);
+
+          for(let i = 0; i < menuData.length; i++){
+            let cat = document.createElement('button');
+            cat.innerHTML = menuData[i][0];
+            cat.classList.add('smaller_text');
+            cats.append(cat);
+            cat.addEventListener("click",function(){
+              selCat = i;
+              showItemSel();
+              console.log(i);
+            });
+          }
+
+          function hideAddItem(){
+              id.classList.remove('fade_in');
+              setTimeout(function(){
+                  id.style.display = "none";
+                  console.log('worked');
+                  document.body.style['overflow-y'] = "scroll";
+              }, 100);
+          }
+
+          function showAddItem(){
+            cats.style.display = "block";
+            itemSel.style.display = "none";
+            id.style.display = "block";
+            document.body.style['overflow-y'] = "hidden";
+          }
+
+          function showItemSel(){
+            cats.style.display = "none";
+            itemSel.style.display = "block";
+            while(itemSelVal.children.length > 0){
+              itemSelVal.removeChild(itemSelVal.children[0]);
+            }
+            for(let i = 1; i < menuData[selCat].length; i++){
+              let node = document.createElement('option');
+              node.innerHTML = menuData[selCat][i][0];
+              node.classList.add('smaller_text');
+              // node.classList.add('smaller_text');
+              itemSelVal.append(node);
+            }
+          }
+
+          function addItem(){
+            let parNode = document.createElement('div');
+            parNode.style.position = "relative";
+            // parNode.classList.add('moveob');
+            OrderText.prepend(parNode);
+
+            let i = itemSelVal.selectedIndex;
+
+            let node = document.createElement('div');
+            node.innerHTML = itemSelVal.options[i].value;
+
+            node.classList.add('slideIn');
+            parNode.append(node);
+
+            let priceNode = document.createElement('div');
+            let val = menuData[selCat][i+1][2];
+            priceNode.innerHTML = val;
+
+            priceNode.style.right = "5rem";
+            priceNode.style.top = "0";
+            priceNode.style.position = "absolute";
+            parNode.append(priceNode);
+
+            totalCost += parseFloat(val.split("£")[1]);
+
+            let closeNode = document.createElement('div');
+            closeNode.innerHTML="X";
+            closeNode.style.right = "2rem";
+            closeNode.style.top = "0";
+            closeNode.style.position = "absolute";
+            closeNode.style.cursor = "pointer";
+            closeNode.addEventListener("click",function(){
+              let _v = OrderText.children[1].innerHTML.split("<")[3].split("£")[1];
+              console.log(_v);
+              totalCost -= parseFloat(_v);
+              OrderText.removeChild(parNode);
+              priceItem.innerHTML = "£"+parseFloat(totalCost).toFixed(2);
+            });
+            parNode.append(closeNode);
+
+            priceItem.innerHTML = "£"+parseFloat(totalCost).toFixed(2);
+
+          }
+
+        </script>
+    </body>
+</html>
